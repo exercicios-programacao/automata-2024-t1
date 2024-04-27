@@ -19,8 +19,7 @@ def load_automata(filename):
     estadosFinais = linha[3].split(" ")
     nodos = linha[4:]        
 
-
-def process(automata, words):
+def procuraEstado(automata, words):
     for nodo in nodos:
      n = nodo.split(" ")
      if n[0] == automata and words == n[2]:
@@ -28,16 +27,18 @@ def process(automata, words):
     return None
 
 
+
+def process(automata, words):
     i = -1
-    for letra in palavra:
+    for letra in words:
         i += 1
-        atual = procuraEstados(atual, letra)
+        atual =  procuraEstado(atual, letra)
         if atual is None:
             print("INVALIDA \n ")
             break
         else:
             print(atual + ", " + letra)
-            if i != len(palavra) - 1:
+            if i != len(words) - 1:
                 print("Para")
             else:
                 if atual in estadosFinais:
