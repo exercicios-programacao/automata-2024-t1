@@ -1,50 +1,73 @@
-"""Implementação de autômatos finitos."""
+import os
+
+class Automato:
+    def __init__(self, sigma, Q, delta, q0, F): 
+        self.sigma = sigma # alfabeto
+        self.Q = Q # conjunto de estados
+        self.q0 = q0 # estado inicial
+        self. F = F # estados finais
+        self.delta = delta # função de transição 
 
 
-def load_automata(filename):
-    """
-    Lê os dados de um autômato finito a partir de um arquivo.
+# pega os dados de um automato a partir dos arquivos na pasta examples
+def load_automata(nome_arquivo: str) -> Automato:
+    with open(nome_arquivo, "rt") as arquivo:
+        linhas = arquivo.readlines()
+        if len(linhas) < 5:
+            raise Exception("Arquivo inválido por número insuficiente de linhas") # erro por poucas linhas no automato
 
-    A estsrutura do arquivo deve ser:
+    # coloca cada linha do arquivo em uma variável
+    linhaAlfabeto = linhas[0].strip().split()
+    linhaEstados = linhas[1].strip().split()
+    linhaEstadoFinal = linhas[2].strip()
+    linhaEstadoInicial = linhas[3].strip()
+    linhasTransicoes = [linha.strip().split() for linha in linhas[4:]]
 
-    <lista de símbolos do alfabeto, separados por espaço (' ')>
-    <lista de nomes de estados>
-    <lista de nomes de estados finais>
-    <nome do estado inicial>
-    <lista de regras de transição, com "origem símbolo destino">
+    if len(linhaAlfabeto) < 1 or len(linhaEstados) < 1 or len(linhaEstadoInicial) < 1:
+        raise Exception("Arquivo inválido por falta de conteúdo no autômato")  # erro por ter menos informação no automato
 
-    Um exemplo de arquivo válido é:
+    automato = Automato(linhaEstados, linhaAlfabeto, {}, linhaEstadoInicial, linhaEstadoFinal)
+    for origem, alfabeto, destino in linhasTransicoes:
+        automato.delta[(origem, alfabeto)] = destino # colocando as transições no dicionario ex: (q0, a): q1
 
-    ```
-    a b
-    q0 q1 q2 q3
-    q0 q3
-    q0
-    q0 a q1
-    q0 b q2
-    q1 a q0
-    q1 b q3
-    q2 a q3
-    q2 b q0
-    q3 a q1
-    q3 b q2
-    ```
+    return automato
 
-    Caso o arquivo seja inválido uma exceção Exception é gerada.
-
-    """
-
-    with open(filename, "rt") as arquivo:
-        # processa arquivo...
-        pass
-
-
-def process(automata, words):
-    """
-    Processa a lista de palavras e retora o resultado.
+def process(automato: Automato, palavras) -> dict:
+    resultados = {}
+    for palavra in palavras:
+        estadoAtual = automato.q0
+        palavraValida = True # começa com a palavra sendo valida
+        for alfabeto in palavra:
+            transicaoValida = False # começa com a transição não estando no automato
+            for origem, alfabeto in automato.delta.keys():
+                if origem == estadoAtual and alfabeto[0] == alfabeto: # verifica se tem algum estado e alfabeto iguais os do automato
+                    estadoAtual = automato.delta[(origem, alfabeto)] # muda o estado atual
+                    transicaoValida = True # transição foi
+                    break
+            if transicaoValida == False:
+                palavraValida = False
+                break
+        if palavraValida == True:
+            if estadoAtual in automato.F:
+                resultados[palavra] = "ACEITA"
+            else:
+                resultados[palavra] = "REJEITA"
+        else:
+            resultados[palavra] = "INVÁLIDA"
     
-    Os resultados válidos são ACEITA, REJEITA, INVALIDA.
-    """
+    return resultados
 
-    for word in words:
-        # tenta reconhecer `word`
+
+
+if __name__ == "__main__":
+    diretorioAtual = os.path.dirname(__file__)  # deu problema pra ler arquivo e o chat gpt disse pra por isso e funcionou
+    caminhoAbsoluto = os.path.join(diretorioAtual, "../examples/01-simples.txt") 
+
+    automato = load_automata(caminhoAbsoluto)
+
+    palavras = ["ab", "ba", "aaa", "bbb", "abba"] # palavras testes
+    resultados = process(automato, palavras)
+
+    print("O resultados são: \n")
+    print(resultados)
+
