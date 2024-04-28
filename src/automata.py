@@ -51,7 +51,7 @@ def load_automata(filename) -> tuple[List[str], List[str], List[tuple[str, str, 
 
             return state_list, alphabet, transition_rule_list, start_state, end_state_list
     except FileNotFoundError as error:
-        print(error)
+        error(error)
 
 
 def process(automata: tuple[List[str], List[str], List[tuple[str, str, str]], str, List[str]], words: List[str]) -> dict[str, str]:
@@ -77,13 +77,11 @@ def process(automata: tuple[List[str], List[str], List[tuple[str, str, str]], st
 
 
 read_automata = load_automata("examples/01-simples.txt")
-words: List[str] = "aabb bbaa aaaa bbbb".split()
+words: List[str] = input("Digite paravras para o autômato: ").split()
 status = process(read_automata, words)
-
 
 # Q -> LISTA DE ESTADOS
 # SIGMA -> ALFABETO
 # DELTA -> LISTA DE TRANSIÇÃO DE ESTADOS
 # q0 -> ESTADO INICIAL
 # F -> LISTA DE ESTADOS FINAIS
-
