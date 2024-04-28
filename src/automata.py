@@ -1,50 +1,68 @@
-"""Implementação de autômatos finitos."""
+from typing import List, Dict, Tuple
 
 
-def load_automata(filename):
-    """
-    Lê os dados de um autômato finito a partir de um arquivo.
+def load_automata(filename: str) -> Tuple:
+    try:
+        with open(filename, "r") as file:
+            lines = file.readlines()
 
-    A estsrutura do arquivo deve ser:
+            Sigma = lines[0].strip().split()
+            Q = lines[1].strip().split()
+            F = lines[2].strip().split()
+            q0 = lines[3].strip()
+            delta = {}
 
-    <lista de símbolos do alfabeto, separados por espaço (' ')>
-    <lista de nomes de estados>
-    <lista de nomes de estados finais>
-    <nome do estado inicial>
-    <lista de regras de transição, com "origem símbolo destino">
+            # Check if final states are in the set of states
+            if not set(F).issubset(Q):
+                raise Exception("Final states are not present in the set of states")
 
-    Um exemplo de arquivo válido é:
+            # Check if initial state is in the set of states
+            if q0 not in Q:
+                raise Exception("Initial state is not present in the set of states")
 
-    ```
-    a b
-    q0 q1 q2 q3
-    q0 q3
-    q0
-    q0 a q1
-    q0 b q2
-    q1 a q0
-    q1 b q3
-    q2 a q3
-    q2 b q0
-    q3 a q1
-    q3 b q2
-    ```
+            for line in lines[4:]:
+                src, symbol, dest = line.strip().split()
 
-    Caso o arquivo seja inválido uma exceção Exception é gerada.
+                # Check if transition leads to a state that is not in the set of states
+                if dest not in Q:
+                    raise Exception(
+                        "Transition leads to a state that is not in the set of states"
+                    )
 
-    """
+                # Check if transition starts from a state that is not in the set of states
+                if src not in Q:
+                    raise Exception(
+                        "Transition starts from a state that is not in the set of states"
+                    )
 
-    with open(filename, "rt") as arquivo:
-        # processa arquivo...
-        pass
+                # Check if transition uses an invalid symbol
+                if symbol not in Sigma:
+                    raise Exception("Transition uses an invalid symbol")
+
+                if src not in delta:
+                    delta[src] = {}
+                delta[src][symbol] = dest
+
+            return Q, Sigma, delta, q0, F
+    except Exception as e:
+        raise Exception("Invalid automaton file format") from e
 
 
-def process(automata, words):
-    """
-    Processa a lista de palavras e retora o resultado.
-    
-    Os resultados válidos são ACEITA, REJEITA, INVALIDA.
-    """
+def process(automata: Tuple, words: List[str]) -> Dict[str, str]:
+    Q, Sigma, delta, q0, F = automata
+    results = {}
 
     for word in words:
-        # tenta reconhecer `word`
+        state = q0
+        for symbol in word:
+            if symbol not in Sigma:
+                results[word] = "INVALIDA"
+                break
+            if symbol not in delta[state]:
+                results[word] = "REJEITA"
+                break
+            state = delta[state][symbol]
+        else:
+            results[word] = "ACEITA" if state in F else "REJEITA"
+
+    return results
