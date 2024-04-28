@@ -50,7 +50,6 @@ def load_automata(filename):
   except FileNotFoundError:
     raise Exception('O arquivo não foi encontrado no sistema')
 
-# SEPARAR OS 2 AQRUIVOS
 
 def process(automata, words):
     if isinstance(automata, dict) and isinstance(words, list):
