@@ -21,7 +21,6 @@ def load_automata(filename):
                     cont = cont + 1
                 if(cont < 1):
                     raise Exception('Estado inicial não está presente no conjunto de estados')
-        print(content)
         return content
 
 
