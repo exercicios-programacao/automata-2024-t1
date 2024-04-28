@@ -5,6 +5,23 @@ def load_automata(filename):
     with open(filename, "rt") as arquivo:
         content = arquivo.readlines()
         content = [line.split() for line in content]
+        cont = 0
+        for state in content[2]:
+            if(state in content[1]):
+                cont = cont + 1
+        if(cont < len(content[2])):
+            raise Exception('Estados finais não estão presentes no conjunto de estados')
+        if(len(content[1]) == 1 and content[3] != content[1]):
+            raise Exception('Estado inicial não está presente no conjunto de estados')
+        
+        elif(len(content[1]) > 1):
+            cont = 0
+            for state in content[1]:
+                if(content[3][0] == state):
+                    cont = cont + 1
+                if(cont < 1):
+                    raise Exception('Estado inicial não está presente no conjunto de estados')
+        print(content)
         return content
 
 
