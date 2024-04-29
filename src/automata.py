@@ -1,5 +1,6 @@
 """Implementação de autômatos finitos."""
 from collections import namedtuple
+import os
 def load_automata(filename):
     #print("load_automata")
     """
@@ -283,6 +284,8 @@ def DescricaoautomataValida(automata):
         Statusautomata='INVALIDO'
         return Statusautomata
 def main():
+    caminhoPasta = os.getcwd()
+    filename = caminhoPasta + '/Testes/01-simples.txt'
     #filename = ".\\Testes\\05-invalido.txt"
     filename = "teste.txt"
     load_automata(filename)
