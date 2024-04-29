@@ -84,7 +84,9 @@ def load_automata(filename):
         pass
     #print(automata)
     retStatusautomata = DescricaoautomataValida(automata)
-    words = ["ababa","cc"]
+    #words = ["ababa","cc"]
+    words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
+    #words = ["a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     retprocess = process(automata,words)
     print("Lista Palavras e resultados")
     print(retprocess)
@@ -161,18 +163,20 @@ def process(automata, words):
     return DictWord
 #Verificar se uma palavra válida, ou seja, se todos os símbolos da palavra fazem parte do alfabeto da lingugaem
 def VerificaPalavra(palavra,simbolos):
-    for caractere in str(palavra):
-        for simbolo in simbolos:
-            if simbolo in caractere:
-                #print("SIM")
-                resultado = 'VALIDA'
+    if len(palavra)>0:
+        for caractere in str(palavra):
+            for simbolo in simbolos:
+                if simbolo in caractere:
+                    #print("SIM")
+                    resultado = 'VALIDA'
+                    break
+            else:
+                #print("NAO")
+                resultado = 'INVALIDA'
                 break
-        else:
-            #print("NAO")
-            resultado = 'INVALIDA'
-            break
-    return tuple((palavra,resultado))
-
+        return tuple((palavra,resultado))
+    else :
+        return tuple((palavra,'INVALIDA'))
 def DescricaoautomataValida(automata):
     print("DescricaoautomataValida")
     #print(automata)
