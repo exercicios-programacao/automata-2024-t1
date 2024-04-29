@@ -56,8 +56,7 @@ def load_automata(filename):
     for edge in delta:
         if not ( edge[0] in states and edge[1] in alphabet and edge[2] in states ):
             raise Exception ("invalid edge")
-    
-    print(( states, alphabet, delta, initialState, finalStates ))
+        
     return ( states, alphabet, delta, initialState, finalStates )
 
 def process(automata, words):
@@ -71,30 +70,24 @@ def process(automata, words):
     delta = automata[2]
     inicialState = automata[3]
     finalStates = automata[4]
+    result = dict()
     for word in words:
-        print(word)
         currentState = inicialState
+        isValidWord = True
         for symbol in word:
-            print(symbol)
             if not ( symbol in alphabet ):
-                print("INVÀLIDA")
+                result[word] = "INVALIDA"
+                isValidWord = False
+                break
             for edge in delta:
                 if edge[0] == currentState and  edge[1] == symbol:
                     print(edge)
                     currentState = edge[2]
                     break
-    print(currentState)
-    if currentState in finalStates:
-        print("ACEITA")
-    else:
-        print("REJEITA")
+        if isValidWord:
+            if currentState in finalStates:
+                result[word] = "ACEITA"
+            else:
+                result[word] = "REJEITA"
 
-
-
-            
-
-
-
-
-automata = load_automata("C:/www/lasalle/automata-2024-t1/examples/01-simples.txt")
-process(automata, ["aaa"])
+    return result
