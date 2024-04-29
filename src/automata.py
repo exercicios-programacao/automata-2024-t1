@@ -1,6 +1,5 @@
 """Implementação de autômatos finitos."""
 
-
 def load_automata(filename):
     """
     Lê os dados de um autômato finito a partir de um arquivo.
@@ -36,8 +35,30 @@ def load_automata(filename):
 
     with open(filename, "rt") as arquivo:
         # processa arquivo...
+        alphabet = tuple( arquivo.readline().strip().split() )
+        states = tuple( arquivo.readline().strip().split() )
+        finalStates = tuple( arquivo.readline().strip().split() )
+        initialState = arquivo.readline().strip()
+        delta = list()
+        for line in arquivo:
+            tempEdge = tuple( line.strip().split() )
+            delta.append( tempEdge )
+
         pass
 
+    if not initialState in states:
+        raise Exception ("invalid initial state")
+
+    for state in finalStates:
+        if not (state in states):
+            raise Exception ("invalid final state")
+    
+    for edge in delta:
+        if not ( edge[0] in states and edge[1] in alphabet and edge[2] in states ):
+            raise Exception ("invalid edge")
+    
+    print(( states, alphabet, delta, initialState, finalStates ))
+    return ( states, alphabet, delta, initialState, finalStates )
 
 def process(automata, words):
     """
@@ -45,6 +66,35 @@ def process(automata, words):
     
     Os resultados válidos são ACEITA, REJEITA, INVALIDA.
     """
-
+    delta = automata[0]
+    alphabet = automata[1]
+    delta = automata[2]
+    inicialState = automata[3]
+    finalStates = automata[4]
     for word in words:
-        # tenta reconhecer `word`
+        print(word)
+        currentState = inicialState
+        for symbol in word:
+            print(symbol)
+            if not ( symbol in alphabet ):
+                print("INVÀLIDA")
+            for edge in delta:
+                if edge[0] == currentState and  edge[1] == symbol:
+                    print(edge)
+                    currentState = edge[2]
+                    break
+    print(currentState)
+    if currentState in finalStates:
+        print("ACEITA")
+    else:
+        print("REJEITA")
+
+
+
+            
+
+
+
+
+automata = load_automata("C:/www/lasalle/automata-2024-t1/examples/01-simples.txt")
+process(automata, ["aaa"])
