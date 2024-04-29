@@ -31,7 +31,7 @@ def load_automata(filename):
     ```
 
     Caso o arquivo seja inválido uma exceção Exception é gerada.
-
+    Forca o commit
     """
     RegrasTransicao = namedtuple('RegrasTransicao',['origem' , 'símbolo', 'destino'])
     with open(filename, "rt") as arquivo:
