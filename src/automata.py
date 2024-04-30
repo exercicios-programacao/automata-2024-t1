@@ -1,3 +1,4 @@
+""" Variaveis globais"""
 ESTADOINICIAL = ""
 ALFABETO  = ""
 ESTADO = ""
@@ -10,17 +11,16 @@ def load_automata(filename):
         arquivo = arq.readlines()
         linha = arquivo.split("\n")
 
-        global estadoInicial
-        global alfabeto 
-        global estados 
-        global estadosFinais 
-        global nodos   
-
+        global ESTADOINICIAL
         ESTADOINICIAL = linha[0]
-        ALFABETO = linha[1].split(" ")
-        ESTADO = linha[2].split(" ")
-        ESTADOSFINAIS = linha[3].split(" ")
-        nodos = linha[4:]        
+        global ALFABETO
+        ALFABETO = linha[1].split(" ") 
+        global ESTADO 
+        ESTADO = linha[2].split(" ")        
+        global ESTADOSFINAIS 
+        ESTADOSFINAIS = linha[3].split(" ")        
+        global NODOS   
+        NODOS = linha[4:]        
         
 def procura_estado(automata, words):
     """procura estados"""
