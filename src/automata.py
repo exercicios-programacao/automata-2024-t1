@@ -59,7 +59,7 @@ def process_word(automata: Tuple, word: str) -> str:
 
     for char in word:
         if char not in Sigma:
-            return "INVÁLIDA"
+            return "INVALIDA"
         try:
             current_state = delta[current_state][char]
         except KeyError:
