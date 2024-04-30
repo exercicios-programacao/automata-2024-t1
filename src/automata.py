@@ -1,50 +1,74 @@
-"""Implementação de autômatos finitos."""
+from typing import List, Dict, Tuple
 
+def load_automata(filename: str) -> Tuple:
+    try:
+        with open(filename, 'r') as file:
+            lines = [line.strip() for line in file.readlines()]
 
-def load_automata(filename):
-    """
-    Lê os dados de um autômato finito a partir de um arquivo.
+        Sigma = lines[0].split()
+        Q = lines[1].split()
+        F = lines[2].split()
+        q0 = lines[3].strip()
+        transitions = lines[4:]
 
-    A estsrutura do arquivo deve ser:
+        # Check if initial state is in the set of states
+        if q0 not in Q:
+            raise Exception("Initial state is not in the set of states")
 
-    <lista de símbolos do alfabeto, separados por espaço (' ')>
-    <lista de nomes de estados>
-    <lista de nomes de estados finais>
-    <nome do estado inicial>
-    <lista de regras de transição, com "origem símbolo destino">
+        # Check if final states are in the set of states
+        for final_state in F:
+            if final_state not in Q:
+                raise Exception("A final state is not in the set of states")
 
-    Um exemplo de arquivo válido é:
+        delta = parse_transitions(transitions, Q, Sigma)
 
-    ```
-    a b
-    q0 q1 q2 q3
-    q0 q3
-    q0
-    q0 a q1
-    q0 b q2
-    q1 a q0
-    q1 b q3
-    q2 a q3
-    q2 b q0
-    q3 a q1
-    q3 b q2
-    ```
+        return (Q, Sigma, delta, q0, set(F))
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File {filename} not found")
+    except Exception as e:
+        raise Exception(f"Error parsing the automaton file: {str(e)}")
 
-    Caso o arquivo seja inválido uma exceção Exception é gerada.
+def parse_transitions(transitions: List[str], Q: List[str], Sigma: List[str]) -> Dict[str, Dict[str, str]]:
+    delta = {state: {} for state in Q}
+    for transition in transitions:
+        parts = transition.split()
+        state_from = parts[0]
+        symbol = parts[1]
+        state_to = parts[2]
 
-    """
+        # Check if transition uses a valid symbol
+        if symbol not in Sigma:
+            raise Exception("Transition uses an invalid symbol")
 
-    with open(filename, "rt") as arquivo:
-        # processa arquivo...
-        pass
+        # Check if transition leads to a state in the set of states
+        if state_to not in Q:
+            raise Exception("Transition leads to a state not in the set of states")
 
+        if symbol in delta[state_from]:
+            if state_to in delta[state_from][symbol]:
+                raise Exception("Non-deterministic transition found")
+        delta[state_from][symbol] = state_to
+    return delta
 
-def process(automata, words):
-    """
-    Processa a lista de palavras e retora o resultado.
-    
-    Os resultados válidos são ACEITA, REJEITA, INVALIDA.
-    """
+def process_word(automata: Tuple, word: str) -> str:
+    Q, Sigma, delta, q0, F = automata
+    current_state = q0
 
-    for word in words:
-        # tenta reconhecer `word`
+    if word == "":
+        return "ACEITA" if current_state in F else "REJEITA"
+
+    for char in word:
+        if char not in Sigma:
+            return "INVALIDA"
+        try:
+            current_state = delta[current_state][char]
+        except KeyError:
+            return "REJEITA"
+
+    if current_state in F:
+        return "ACEITA"
+    else:
+        return "REJEITA"
+
+def process(automata: Tuple, words: List[str]) -> Dict[str, str]:
+    return {word: process_word(automata, word) for word in words}
