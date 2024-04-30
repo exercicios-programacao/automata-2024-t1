@@ -11,6 +11,8 @@ def load_automata(filename):
         arquivo = arq.readlines()
         linha = arquivo.split("\n")
 
+# Usado quando você usa a instrução "global" para atualizar uma variável global.
+# Pylint desencoraja seu uso. Isso não significa que você não possa usá-lo!
         global ESTADOINICIAL
         ESTADOINICIAL = linha[0]
         global ALFABETO
