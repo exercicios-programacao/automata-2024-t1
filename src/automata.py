@@ -53,9 +53,7 @@ def load_automata(filename):
 
     for edge in delta:
         if not (
-            edge[0] in states and
-            edge[1] in alphabet and
-            edge[2] in states
+            edge[0] in states and edge[1] in alphabet and edge[2] in states
         ):
             raise ValueError("invalid edge")
 
