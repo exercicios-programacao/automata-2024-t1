@@ -4,6 +4,7 @@
 # patch files
 *.orig
 *.rej
+.venv
 
 # generated files
 /**/__pycache__/
