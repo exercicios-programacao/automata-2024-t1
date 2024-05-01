@@ -203,4 +203,4 @@ def process(automata, words):
 #         indent=4,
 #     )
 # )
-#nice
+# nice
