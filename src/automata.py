@@ -58,11 +58,11 @@ def load_automata(filename):
     # Verificar se todos os estados finais estão no conjunto de estados
     for state in final_states:
         if state not in states:
-            raise InvalidTransitionError(f"Estado final não encontrado no conjunto de estados: {state}")
+            raise InvalidTransitionError(f"Estado final não encontrado no conjunto: {state}")
 
     # Verificar se o estado inicial está no conjunto de estados
     if initial_state not in states:
-        raise InvalidTransitionError(f"Estado inicial não encontrado no conjunto de estados: {initial_state}")
+        raise InvalidTransitionError(f"Estado inicial não encontrado no conjunto: {initial_state}")
 
     automata = (states, alphabet, delta, initial_state, final_states)
     return automata
@@ -77,7 +77,8 @@ def process(automata, words):
     words: Lista de palavras a serem processadas.
 
     Returns:
-    Um dicionário com palavras como chaves e seus respectivos resultados ('ACEITA', 'REJEITA', 'INVALIDA').
+    Um dicionário com palavras como chaves e
+    seus respectivos resultados ('ACEITA', 'REJEITA', 'INVALIDA').
     """
     _, alphabet, delta, initial_state, final_states = automata
     results = {}
