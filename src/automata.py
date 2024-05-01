@@ -1,5 +1,6 @@
 """Implementação de autômatos finitos."""
 
+
 class InvalidTransitionError(Exception):
     """Exceção lançada para indicar uma transição inválida no autômato."""
 
@@ -95,7 +96,7 @@ def process(automata, words):
                 results[word] = 'REJEITA'
                 valid = False
                 break
-        
+
         if valid:
             if current_state in final_states:
                 results[word] = 'ACEITA'
