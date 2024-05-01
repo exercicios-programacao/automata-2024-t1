@@ -1,9 +1,10 @@
 """ Variaveis globais"""
 ESTADOINICIAL = ""
-ALFABETO  = ""
+ALFABETO = ""
 ESTADO = ""
 ESTADOSFINAIS = ""
-NODOS  = ""
+NODOS = ""
+
 
 def load_automata(filename):
     """Chama arquivo e abre"""
@@ -11,19 +12,21 @@ def load_automata(filename):
         arquivo = arq.readlines()
         linha = arquivo.split("\n")
 
-# Usado quando você usa a instrução "global" para atualizar uma variável global.
+# Usado quando você usa a instrução "global" para atualizar uma variável global
 # Pylint desencoraja seu uso. Isso não significa que você não possa usá-lo!
+# pylint: disable=global-statement
         global ESTADOINICIAL
         ESTADOINICIAL = linha[0]
         global ALFABETO
-        ALFABETO = linha[1].split(" ") 
-        global ESTADO 
-        ESTADO = linha[2].split(" ")        
+        ALFABETO = linha[1].split(" ")
+        global ESTADO
+        ESTADO = linha[2].split(" ")
         global ESTADOSFINAIS 
-        ESTADOSFINAIS = linha[3].split(" ")        
-        global NODOS   
-        NODOS = linha[4:]        
-        
+        ESTADOSFINAIS = linha[3].split(" ")
+        global NODOS
+        NODOS = linha[4:]
+
+
 def procura_estado(automata, words):
     """procura estados"""
     for nodo in NODOS:
@@ -32,15 +35,16 @@ def procura_estado(automata, words):
             return n[1]
     return None
 
+
 def process(automata, words):
+    # pylint: disable=unused-argument
     """Processo"""
     i = -1
     for letra in words:
         i += 1
-        atual =  procura_estado(atual, letra)
+        atual = procura_estado(atual, letra) # noqa
         if atual is None:
             print("INVALIDA \n ")
-            break
         else:
             print(atual + ", " + letra)
             if i != len(words) - 1:
@@ -49,4 +53,4 @@ def process(automata, words):
                 if atual in ESTADOSFINAIS:
                     print("\n ACEITA ")
                 else:
-                    print("\n REJEITA")                   
+                    print("\n REJEITA")
