@@ -9,16 +9,25 @@
 #
 # coloquei as docstrings de volta, tinha tirado quando estava testando
 
+"""
+Arquivo com as funções de processamento do autômato.
+
+load_automata: carrega um autômato a partir de um arquivo de texto.
+process: processa um autômato com uma lista de palavras.
+"""
+
 
 def load_automata(filename):
-    """docstring for load_automata
-    Carrega um autômato a partir de um arquivo de texto
+    """
+    Carrega um autômato a partir de um arquivo de texto.
+
     Args:
-        filename (str): nome do arquivo de texto
+        filename (str): nome do arquivo de texto.
         Returns:
-        tuple: uma tupla com os elementos do autômato
+        tuple: uma tupla com os elementos do autômato.
+
     Raises:
-        Exception: se houver erro na entrada
+        Exception: se houver erro na entrada.
     """
     try:
         with open(filename, "r") as f:
@@ -74,7 +83,7 @@ def load_automata(filename):
                     f"ERRO DE ENTRADA - ESTADO FINAL {estado} não pertence ao conjunto de estados: {conjunto_de_estados}"
                 )
         for estado in dicionario_de_transicoes:
-            for letra in dicionario_de_transicoes[estado]:
+            for letra in dicionario_de_transicoes[estado].keys():
                 if dicionario_de_transicoes[estado][letra] == "":
                     raise Exception(
                         f"ERRO DE ENTRADA - TRANSIÇÃO INCOMPLETA: {estado} - {letra} - {dicionario_de_transicoes[estado][letra]}"
@@ -94,13 +103,15 @@ def load_automata(filename):
 
 
 def process(automata, words):
-    """docstring for process
-    Processa um autômato com uma lista de palavras
+    """
+    Processa um autômato com uma lista de palavras.
+
     Args:
-        automata (tuple): uma tupla com os elementos do autômato
-        words (list): uma lista de palavras
-        Returns:
-        dict: um dicionário com as palavras e seus respectivos resultados
+        automata (tuple): uma tupla com os elementos do autômato.
+        words (list): uma lista de palavras.
+
+    Returns:
+        dict: um dicionário com as palavras e seus respectivos resultados.
     """
     (
         conjunto_de_estados,
@@ -109,38 +120,39 @@ def process(automata, words):
         estado_inicial,
         estados_finais,
     ) = automata
-    returnDict = {}
+    return_dict = {}
+    print(conjunto_de_estados)
 
     for palavra in words:
-        estadoAtual = estado_inicial
+        estado_atual = estado_inicial
         invalida = False
 
         # para cada letra da palavra
         for char in palavra:
 
             if char not in alfabeto:  # se o char não pertence ao alfabeto é invalida
-                returnDict[palavra] = "INVALIDA"
+                return_dict[palavra] = "INVALIDA"
                 invalida = True
                 break
 
             try:
-                estadoAtual = dicionario_de_transicoes[estadoAtual][char]
+                estado_atual = dicionario_de_transicoes[estado_atual][char]
             except (
                 KeyError
             ):  # se não tiver transição para o estado no dicionário é rejeitada pelo automato
-                returnDict[palavra] = "REJEITA"
+                return_dict[palavra] = "REJEITA"
                 invalida = True
                 break
 
-        if estadoAtual in estados_finais and not invalida:
-            returnDict[palavra] = "ACEITA"
-        elif estadoAtual not in estados_finais and not invalida:
-            returnDict[palavra] = "REJEITA"
+        if estado_atual in estados_finais and not invalida:
+            return_dict[palavra] = "ACEITA"
+        elif estado_atual not in estados_finais and not invalida:
+            return_dict[palavra] = "REJEITA"
         else:
             # nada deveria chegar aqui mas se chegar deve ser invalida
-            returnDict[palavra] = "INVALIDA"
+            return_dict[palavra] = "INVALIDA"
 
-    return returnDict
+    return return_dict
 
 
 # words = [
