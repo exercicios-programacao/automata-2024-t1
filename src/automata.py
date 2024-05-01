@@ -13,6 +13,7 @@
 Arquivo com as funções de processamento do autômato.
 
 load_automata: carrega um autômato a partir de um arquivo de texto.
+
 process: processa um autômato com uma lista de palavras.
 """
 
@@ -30,7 +31,7 @@ def load_automata(filename):
         Exception: se houver erro na entrada.
     """
     try:
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="utf-8") as f:
             linhas = []
             for linha_do_arquivo in f.readlines():
                 linhas.append(linha_do_arquivo.strip())
@@ -39,34 +40,35 @@ def load_automata(filename):
         conjunto_de_estados = linhas[1].split(" ")
         estados_finais = linhas[2].split(" ")
         estado_inicial = linhas[3]
-        regras_de_transicao = linhas[4:]
         # dict para guardar as transições
         dicionario_de_transicoes = {}
         for estado in conjunto_de_estados:
             dicionario_de_transicoes[estado] = {}
             for letra in alfabeto:
                 dicionario_de_transicoes[estado][letra] = ""
-        for regras in regras_de_transicao:
+        for regras in linhas[4:]:
             regra = regras.split(" ")
             estado_inicial_transicao = regra[0]
             letra = regra[1]
             estado_final_transicao = regra[2]
             # exceptions
             if letra not in alfabeto:
-                raise Exception(
-                    f"ERRO DE ENTRADA - ALFABETO  a letra: {letra} não pertence ao alfabeto: {alfabeto}"
+                raise IOError(
+                    f"ALFABETO a letra: {
+                        letra} não pertence ao alfabeto: {alfabeto}"
                 )
             if estado_inicial_transicao not in conjunto_de_estados:
-                raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO INICIAL DE TRANSIÇÃO {estado_inicial_transicao} não pertence ao conjunto de estados: {conjunto_de_estados}"
+                raise IOError(
+                    f"{estado_inicial_transicao} não pertence ao{conjunto_de_estados}"
                 )
             if estado_final_transicao not in conjunto_de_estados:
-                raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO FINAL DE TRANSIÇÃO {estado_final_transicao} não pertence ao conjunto de estados: {conjunto_de_estados}"
+                raise IOError(
+                    f"{estado_final_transicao} não pertence ao{conjunto_de_estados}"
                 )
             if dicionario_de_transicoes[estado_inicial_transicao][letra] != "":
-                raise Exception(
-                    f"ERRO DE ENTRADA - TRANSIÇÃO NÃO DETERMINÍSTICA: {estado_inicial_transicao} - {letra} - {estado_final_transicao}"
+                raise Warning(
+                    f"TRANSIÇÃO NÃO DETERMINÍSTICA: {
+                        estado_inicial_transicao} - {letra} - {estado_final_transicao}"
                 )
             # exceptions
             dicionario_de_transicoes[estado_inicial_transicao][
@@ -74,20 +76,23 @@ def load_automata(filename):
             ] = estado_final_transicao
         # exceptions o retorno
         if estado_inicial not in conjunto_de_estados:
-            raise Exception(
-                f"ERRO DE ENTRADA - ESTADO INICIAL {estado_inicial} não pertence ao conjunto de estados: {conjunto_de_estados}"
+            raise IOError(
+                f"ESTADO INICIAL {estado_inicial} não pertence ao{
+                    conjunto_de_estados}"
             )
+        for estado, transicoes in dicionario_de_transicoes.items():
+            for letra, estado_final in transicoes.items():
+                if estado_final == "":
+                    raise IOError(
+                        f"TRANSIÇÃO INCOMPLETA: {
+                            estado} - {letra} - {estado_final}"
+                    )
         for estado in estados_finais:
             if estado not in conjunto_de_estados:
-                raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO FINAL {estado} não pertence ao conjunto de estados: {conjunto_de_estados}"
+                raise IOError(
+                    f"ESTADO FINAL {estado} não pertence ao{
+                        conjunto_de_estados}"
                 )
-        for estado in dicionario_de_transicoes:
-            for letra in dicionario_de_transicoes[estado].keys():
-                if dicionario_de_transicoes[estado][letra] == "":
-                    raise Exception(
-                        f"ERRO DE ENTRADA - TRANSIÇÃO INCOMPLETA: {estado} - {letra} - {dicionario_de_transicoes[estado][letra]}"
-                    )
         # exceptions o retorno
         return (
             conjunto_de_estados,
@@ -98,7 +103,7 @@ def load_automata(filename):
         )
     # erro se erro
     except Exception as exception:
-        raise Exception("ERRO DE ENTRADA" + str(exception))
+        raise IOError("ERRO DE ENTRADA" + str(exception)) from exception
     # erro se erro
 
 
@@ -198,3 +203,4 @@ def process(automata, words):
 #         indent=4,
 #     )
 # )
+#nice
