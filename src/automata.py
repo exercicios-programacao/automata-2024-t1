@@ -36,11 +36,11 @@ def load_automata(filename):
     with open(filename, 'rt', encoding="utf-8") as file:
         lines = file.read().splitlines()
 
-    alphabet = lines[0].split(' ')
-    states = lines[1].split(' ')
-    final_states = lines[2].split(' ')
+    alphabet = lines[0].split()
+    states = lines[1].split()
+    final_states = lines[2].split()
     initial_state = lines[3]
-    transitions = [line.split(' ') for line in lines[4:]]
+    transitions = [line.split() for line in lines[4:]]
 
     delta = {}
     for state in states:
@@ -52,7 +52,16 @@ def load_automata(filename):
         if origin in states and symbol in alphabet and destination in states:
             delta[origin][symbol] = destination
         else:
-            raise InvalidTransitionError("Transição inválida.")
+            raise InvalidTransitionError(f"Transição inválida: {origin} {symbol} {destination}")
+
+    # Verificar se todos os estados finais estão no conjunto de estados
+    for state in final_states:
+        if state not in states:
+            raise InvalidTransitionError(f"Estado final não encontrado no conjunto de estados: {state}")
+
+    # Verificar se o estado inicial está no conjunto de estados
+    if initial_state not in states:
+        raise InvalidTransitionError(f"Estado inicial não encontrado no conjunto de estados: {initial_state}")
 
     automata = (states, alphabet, delta, initial_state, final_states)
     return automata
