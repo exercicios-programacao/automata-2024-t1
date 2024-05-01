@@ -1,11 +1,12 @@
 """Implementação de autômatos finitos."""
 
+import json
 
 def load_automata(filename):
     """
     Lê os dados de um autômato finito a partir de um arquivo.
 
-    A estsrutura do arquivo deve ser:
+    A estrutura do arquivo deve ser:
 
     <lista de símbolos do alfabeto, separados por espaço (' ')>
     <lista de nomes de estados>
@@ -34,17 +35,53 @@ def load_automata(filename):
 
     """
 
-    with open(filename, "rt") as arquivo:
-        # processa arquivo...
-        pass
+    with open(filename, 'rt', encoding="utf-8") as file:
+        lines = file.read().splitlines()
 
+    alphabet = lines[0].split(' ')
+    states = lines[1].split(' ')
+    final_states = lines[2].split(' ')
+    initial_state = lines[3]
+    transitions = [line.split(' ') for line in lines[4:]]
+
+    delta = {}
+    for state in states:
+        delta[state] = {}
+        for symbol in alphabet:
+            delta[state][symbol] = None
+
+    for origin, symbol, destination in transitions:
+        if origin in states and symbol in alphabet and destination in states:
+            delta[origin][symbol] = destination
+        else:
+            raise Exception("Transição inválida.")
+
+    automata = (states, alphabet, delta, initial_state, final_states)
+    return automata
 
 def process(automata, words):
-    """
-    Processa a lista de palavras e retora o resultado.
-    
-    Os resultados válidos são ACEITA, REJEITA, INVALIDA.
-    """
+    states, alphabet, delta, initial_state, final_states = automata
+    results = {}
 
     for word in words:
-        # tenta reconhecer `word`
+        current_state = initial_state
+        valid = True
+
+        for symbol in word:
+            if symbol not in alphabet:
+                results[word] = 'INVALIDA'
+                valid = False
+                break
+            current_state = delta[current_state].get(symbol)
+            if current_state is None:
+                results[word] = 'REJEITA'
+                valid = False
+                break
+        
+        if valid:
+            if current_state in final_states:
+                results[word] = 'ACEITA'
+            else:
+                results[word] = 'REJEITA'
+
+    return results
