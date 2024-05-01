@@ -1,4 +1,4 @@
-""" Variaveis globais"""
+"""Variaveis globais."""
 ESTADOINICIAL = ""
 ALFABETO = ""
 ESTADO = ""
@@ -7,7 +7,7 @@ NODOS = ""
 
 
 def load_automata(filename):
-    """Chama arquivo e abre"""
+    """Chama arquivo e abre."""
     with open(filename, encoding="utf-8") as arq:
         arquivo = arq.readlines()
         linha = arquivo.split("\n")
@@ -28,7 +28,7 @@ def load_automata(filename):
 
 
 def procura_estado(automata, words):
-    """procura estados"""
+    """Procura estados."""
     for nodo in NODOS:
         n = nodo.split(" ")
         if n[0] == automata and words == n[2]:
@@ -38,7 +38,7 @@ def procura_estado(automata, words):
 
 def process(automata, words):
     # pylint: disable=unused-argument
-    """Processo"""
+    """Processo."""
     i = -1
     for letra in words:
         i += 1
