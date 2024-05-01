@@ -1,6 +1,8 @@
 """Implementação de autômatos finitos."""
 
-import json
+class InvalidTransitionError(Exception):
+    """Exceção lançada para indicar uma transição inválida no autômato."""
+
 
 def load_automata(filename):
     """
@@ -16,7 +18,6 @@ def load_automata(filename):
 
     Um exemplo de arquivo válido é:
 
-    ```
     a b
     q0 q1 q2 q3
     q0 q3
@@ -29,12 +30,9 @@ def load_automata(filename):
     q2 b q0
     q3 a q1
     q3 b q2
-    ```
 
-    Caso o arquivo seja inválido uma exceção Exception é gerada.
-
+    Caso o arquivo seja inválido uma exceção InvalidTransitionError é gerada.
     """
-
     with open(filename, 'rt', encoding="utf-8") as file:
         lines = file.read().splitlines()
 
@@ -54,13 +52,24 @@ def load_automata(filename):
         if origin in states and symbol in alphabet and destination in states:
             delta[origin][symbol] = destination
         else:
-            raise Exception("Transição inválida.")
+            raise InvalidTransitionError("Transição inválida.")
 
     automata = (states, alphabet, delta, initial_state, final_states)
     return automata
 
+
 def process(automata, words):
-    states, alphabet, delta, initial_state, final_states = automata
+    """
+    Processa uma lista de palavras através do autômato e retorna os resultados.
+
+    Args:
+    automata: A estrutura do autômato.
+    words: Lista de palavras a serem processadas.
+
+    Returns:
+    Um dicionário com palavras como chaves e seus respectivos resultados ('ACEITA', 'REJEITA', 'INVALIDA').
+    """
+    _, alphabet, delta, initial_state, final_states = automata
     results = {}
 
     for word in words:
