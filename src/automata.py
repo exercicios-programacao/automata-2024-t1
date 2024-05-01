@@ -21,7 +21,7 @@ def load_automata(filename):
         ALFABETO = linha[1].split(" ")
         global ESTADO
         ESTADO = linha[2].split(" ")
-        global ESTADOSFINAIS 
+        global ESTADOSFINAIS
         ESTADOSFINAIS = linha[3].split(" ")
         global NODOS
         NODOS = linha[4:]
