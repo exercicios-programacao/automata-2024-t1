@@ -3,75 +3,89 @@
 
 # os.system("cls")
 # meu formatter "ms-python.black-formatter" deixa feinho assim mas da pra ler melhor
+# comentarios:
+# eu não gosto de snake_case, adiciona muitos underlines e deixa o código espaçado demais
+# vou colocar pra ficar verdinho no github
+#
+# coloquei as docstrings de volta, tinha tirado quando estava testando
 
 
 def load_automata(filename):
+    """docstring for load_automata
+    Carrega um autômato a partir de um arquivo de texto
+    Args:
+        filename (str): nome do arquivo de texto
+        Returns:
+        tuple: uma tupla com os elementos do autômato
+    Raises:
+        Exception: se houver erro na entrada
+    """
     try:
         with open(filename, "r") as f:
             linhas = []
-            for l in f.readlines():
-                linhas.append(l.strip())
+            for linha_do_arquivo in f.readlines():
+                linhas.append(linha_do_arquivo.strip())
         # tratando o arquivo
         alfabeto = linhas[0].split(" ")
-        conjuntoDeEstados = linhas[1].split(" ")
-        estadosFinais = linhas[2].split(" ")
-        estadoInicial = linhas[3]
-        regrasDeTransicao = linhas[4:]
-
+        conjunto_de_estados = linhas[1].split(" ")
+        estados_finais = linhas[2].split(" ")
+        estado_inicial = linhas[3]
+        regras_de_transicao = linhas[4:]
         # dict para guardar as transições
-        dictTransicoes = {}
-        for estado in conjuntoDeEstados:
-            dictTransicoes[estado] = {}
+        dicionario_de_transicoes = {}
+        for estado in conjunto_de_estados:
+            dicionario_de_transicoes[estado] = {}
             for letra in alfabeto:
-                dictTransicoes[estado][letra] = ""
-
-        for regras in regrasDeTransicao:
+                dicionario_de_transicoes[estado][letra] = ""
+        for regras in regras_de_transicao:
             regra = regras.split(" ")
-            estadoInicialTransicao = regra[0]
+            estado_inicial_transicao = regra[0]
             letra = regra[1]
-            estadoFinalTransicao = regra[2]
+            estado_final_transicao = regra[2]
             # exceptions
             if letra not in alfabeto:
                 raise Exception(
                     f"ERRO DE ENTRADA - ALFABETO  a letra: {letra} não pertence ao alfabeto: {alfabeto}"
                 )
-            if estadoInicialTransicao not in conjuntoDeEstados:
+            if estado_inicial_transicao not in conjunto_de_estados:
                 raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO INICIAL DE TRANSIÇÃO {estadoInicialTransicao} não pertence ao conjunto de estados: {conjuntoDeEstados}"
+                    f"ERRO DE ENTRADA - ESTADO INICIAL DE TRANSIÇÃO {estado_inicial_transicao} não pertence ao conjunto de estados: {conjunto_de_estados}"
                 )
-            if estadoFinalTransicao not in conjuntoDeEstados:
+            if estado_final_transicao not in conjunto_de_estados:
                 raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO FINAL DE TRANSIÇÃO {estadoFinalTransicao} não pertence ao conjunto de estados: {conjuntoDeEstados}"
+                    f"ERRO DE ENTRADA - ESTADO FINAL DE TRANSIÇÃO {estado_final_transicao} não pertence ao conjunto de estados: {conjunto_de_estados}"
                 )
-            if dictTransicoes[estadoInicialTransicao][letra] != "":
+            if dicionario_de_transicoes[estado_inicial_transicao][letra] != "":
                 raise Exception(
-                    f"ERRO DE ENTRADA - TRANSIÇÃO NÃO DETERMINÍSTICA: {estadoInicialTransicao} - {letra} - {estadoFinalTransicao}"
+                    f"ERRO DE ENTRADA - TRANSIÇÃO NÃO DETERMINÍSTICA: {estado_inicial_transicao} - {letra} - {estado_final_transicao}"
                 )
             # exceptions
-            dictTransicoes[estadoInicialTransicao][letra] = estadoFinalTransicao
+            dicionario_de_transicoes[estado_inicial_transicao][
+                letra
+            ] = estado_final_transicao
         # exceptions o retorno
-        if estadoInicial not in conjuntoDeEstados:
+        if estado_inicial not in conjunto_de_estados:
             raise Exception(
-                f"ERRO DE ENTRADA - ESTADO INICIAL {estadoInicial} não pertence ao conjunto de estados: {conjuntoDeEstados}"
+                f"ERRO DE ENTRADA - ESTADO INICIAL {estado_inicial} não pertence ao conjunto de estados: {conjunto_de_estados}"
             )
-        for estado in estadosFinais:
-            if estado not in conjuntoDeEstados:
+        for estado in estados_finais:
+            if estado not in conjunto_de_estados:
                 raise Exception(
-                    f"ERRO DE ENTRADA - ESTADO FINAL {estado} não pertence ao conjunto de estados: {conjuntoDeEstados}"
+                    f"ERRO DE ENTRADA - ESTADO FINAL {estado} não pertence ao conjunto de estados: {conjunto_de_estados}"
                 )
-        for estado in dictTransicoes:
-            for letra in dictTransicoes[estado]:
-                if dictTransicoes[estado][letra] == "":
+        for estado in dicionario_de_transicoes:
+            for letra in dicionario_de_transicoes[estado]:
+                if dicionario_de_transicoes[estado][letra] == "":
                     raise Exception(
-                        f"ERRO DE ENTRADA - TRANSIÇÃO INCOMPLETA: {estado} - {letra} - {dictTransicoes[estado][letra]}"
+                        f"ERRO DE ENTRADA - TRANSIÇÃO INCOMPLETA: {estado} - {letra} - {dicionario_de_transicoes[estado][letra]}"
                     )
         # exceptions o retorno
         return (
-            conjuntoDeEstados,
+            conjunto_de_estados,
             alfabeto,
-            dictTransicoes,
-            estadoInicial,
-            estadosFinais,
+            dicionario_de_transicoes,
+            estado_inicial,
+            estados_finais,
         )
     # erro se erro
     except Exception as exception:
@@ -80,17 +94,25 @@ def load_automata(filename):
 
 
 def process(automata, words):
+    """docstring for process
+    Processa um autômato com uma lista de palavras
+    Args:
+        automata (tuple): uma tupla com os elementos do autômato
+        words (list): uma lista de palavras
+        Returns:
+        dict: um dicionário com as palavras e seus respectivos resultados
+    """
     (
-        conjuntoDeEstados,
+        conjunto_de_estados,
         alfabeto,
-        dictTransicoes,
-        estadoInicial,
-        estadosFinais,
+        dicionario_de_transicoes,
+        estado_inicial,
+        estados_finais,
     ) = automata
     returnDict = {}
 
     for palavra in words:
-        estadoAtual = estadoInicial
+        estadoAtual = estado_inicial
         invalida = False
 
         # para cada letra da palavra
@@ -102,7 +124,7 @@ def process(automata, words):
                 break
 
             try:
-                estadoAtual = dictTransicoes[estadoAtual][char]
+                estadoAtual = dicionario_de_transicoes[estadoAtual][char]
             except (
                 KeyError
             ):  # se não tiver transição para o estado no dicionário é rejeitada pelo automato
@@ -110,9 +132,9 @@ def process(automata, words):
                 invalida = True
                 break
 
-        if estadoAtual in estadosFinais and not invalida:
+        if estadoAtual in estados_finais and not invalida:
             returnDict[palavra] = "ACEITA"
-        elif estadoAtual not in estadosFinais and not invalida:
+        elif estadoAtual not in estados_finais and not invalida:
             returnDict[palavra] = "REJEITA"
         else:
             # nada deveria chegar aqui mas se chegar deve ser invalida
