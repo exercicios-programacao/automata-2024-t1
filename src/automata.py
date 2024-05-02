@@ -53,7 +53,7 @@ def load_automata(filename):
             resposta['estados_finais'] = estados_finais
             if linhas[3].strip() in resposta['estados']:
                 resposta['estado_inicial'] = linhas[3].strip()
-            else: 
+            else:
                 raise Exception('O estado inicial não está presente na descrição do autômato')
             for linha in linhas[4:]:
                 linha = linha.strip().split(' ')
