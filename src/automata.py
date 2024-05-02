@@ -1,4 +1,37 @@
+"""Implementação de autômatos finitos"""
+
 def load_automata(filename):
+    """
+    Lê os dados de um autômato finito a partir de um arquivo.
+
+    A estsrutura do arquivo deve ser:
+
+    <lista de símbolos do alfabeto, separados por espaço (' ')>
+    <lista de nomes de estados>
+    <lista de nomes de estados finais>
+    <nome do estado inicial>
+    <lista de regras de transição, com "origem símbolo destino">
+
+    Um exemplo de arquivo válido é:
+
+    ```
+    a b
+    q0 q1 q2 q3
+    q0 q3
+    q0
+    q0 a q1
+    q0 b q2
+    q1 a q0
+    q1 b q3
+    q2 a q3
+    q2 b q0
+    q3 a q1
+    q3 b q2
+    ```
+
+    Caso o arquivo seja inválido uma exceção Exception é gerada.
+    """
+
     if isinstance(filename, str):
         if not filename.endswith('.txt'):
             filename += '.txt'
@@ -10,42 +43,48 @@ def load_automata(filename):
         with open(filename, "rt") as arquivo:
             linhas, regras = arquivo.readlines(), []
             for linha in linhas:
-              if linha == linhas[0]:
-                  resposta['simbolos'] = linha.strip().split(' ')
-              elif linha == linhas[1]:
-                  resposta['estados'] = linha.strip().split(' ')
-              elif linha == linhas[2]:
-                  final_states = []
-                  for estado in linha.strip().split(' '):
-                      if estado in resposta['estados']:
-                          final_states.append(estado)
-                      else:
-                          raise Exception('Os estados finais devem estar presentes na descrição do autômato')
-                  resposta['estados_finais'] = final_states
-              elif linha == linhas[3]:
-                  if linha.strip() in resposta['estados']:
-                      resposta['estado_inicial'] = linha.strip()
-                  else:
-                      raise Exception('O estado inicial não está presente na descrição do autômato')
-              else:
-                  linha = linha.strip().split(' ')
-                  if len(linha) >= 3:
-                      if linha[0] in resposta['estados'] and linha[2] in resposta['estados'] and linha[1] in resposta['simbolos']:
-                          try:
-                              regras.append(tuple(linha))
-                          except ValueError:
-                              raise Exception('O valor não pôde ser convertido para tupla e inserido nas regras do autômato')
-                      else:
-                          raise Exception('Os estados e símbolos devem estar presentes na descrição do autômato')
-                  else:
-                      raise Exception('As regras de transição precisam de no mínimo 3 parâmetros')
-              resposta['regras'] = regras
+                if linha == linhas[0]:
+                    resposta['simbolos'] = linha.strip().split(' ')
+                elif linha == linhas[1]:
+                    resposta['estados'] = linha.strip().split(' ')
+                elif linha == linhas[2]:
+                    final_states = []
+                    for estado in linha.strip().split(' '):
+                        if estado in resposta['estados']:
+                            final_states.append(estado)
+                        else:
+                            raise Exception('Os estados finais devem estar presentes na descrição do autômato')
+                    resposta['estados_finais'] = final_states
+                elif linha == linhas[3]:
+                    if linha.strip() in resposta['estados']:
+                        resposta['estado_inicial'] = linha.strip()
+                    else:
+                        raise Exception('O estado inicial não está presente na descrição do autômato')
+                else:
+                    linha = linha.strip().split(' ')
+                    if len(linha) >= 3:
+                        if linha[0] in resposta['estados'] and linha[2] in resposta['estados'] and linha[1] in resposta['simbolos']:
+                            try:
+                                regras.append(tuple(linha))
+                            except ValueError:
+                                raise Exception('O valor não pôde ser convertido para tupla e inserido nas regras do autômato')
+                        else:
+                            raise Exception('Os estados e símbolos devem estar presentes na descrição do autômato')
+                    else:
+                        raise Exception('As regras de transição precisam de no mínimo 3 parâmetros')
+                resposta['regras'] = regras
         return resposta          
     except FileNotFoundError:
-      raise Exception('O arquivo não foi encontrado no sistema')
+        raise Exception('O arquivo não foi encontrado no sistema')
 
 
 def process(automata, words):
+    """
+    Processa a lista de palavras e retora o resultado.
+    
+    Os resultados válidos são ACEITA, REJEITA, INVALIDA.
+    """
+    
     if isinstance(automata, dict) and isinstance(words, list):
         for w in words:
             if not isinstance(w, str):
