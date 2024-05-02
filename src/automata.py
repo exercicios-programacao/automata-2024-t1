@@ -1,54 +1,48 @@
 def load_automata(filename):
-  if isinstance(filename, str):
-    if not filename.endswith('.txt'):
-      filename += '.txt'
-    resposta = {}
-  else:
-    raise Exception('O tipo esperado para o nome do arquivo é string')
+    if isinstance(filename, str):
+        if not filename.endswith('.txt'):
+            filename += '.txt'
+        resposta = {}
+    else:
+        raise Exception('O tipo esperado para o nome do arquivo é string')
 
-  try:
-    with open(filename, "rt") as arquivo:
-      linhas, regras = arquivo.readlines(), []
-      for linha in linhas:
-
-        if linha == linhas[0]:
-          resposta['simbolos'] = linha.strip().split(' ')
-
-        elif linha == linhas[1]:
-          resposta['estados'] = linha.strip().split(' ')
-
-        elif linha == linhas[2]:
-          final_states = []
-          for estado in linha.strip().split(' '):
-            if estado in resposta['estados']:
-              final_states.append(estado)
-            else:
-              raise Exception('Os estados finais devem estar presentes na descrição do autômato')
-          resposta['estados_finais'] = final_states
-
-        elif linha == linhas[3]:
-          if linha.strip() in resposta['estados']:
-            resposta['estado_inicial'] = linha.strip()
-          else:
-            raise Exception('O estado inicial não está presente na descrição do autômato')
-
-        else:
-          linha = linha.strip().split(' ')
-          if len(linha) >= 3:
-            if linha[0] in resposta['estados'] and linha[2] in resposta['estados'] and linha[1] in resposta['simbolos']:
-              try:
-                regras.append(tuple(linha))
-              except ValueError:
-                raise Exception('O valor não pôde ser convertido para tupla e inserido nas regras do autômato')
-            else:
-              raise Exception('Os estados e símbolos devem estar presentes na descrição do autômato')
-          else:
-              raise Exception('As regras de transição precisam de no mínimo 3 parâmetros')
-
-      resposta['regras'] = regras
-      return resposta          
-  except FileNotFoundError:
-    raise Exception('O arquivo não foi encontrado no sistema')
+    try:
+        with open(filename, "rt") as arquivo:
+            linhas, regras = arquivo.readlines(), []
+            for linha in linhas:
+              if linha == linhas[0]:
+                  resposta['simbolos'] = linha.strip().split(' ')
+              elif linha == linhas[1]:
+                  resposta['estados'] = linha.strip().split(' ')
+              elif linha == linhas[2]:
+                  final_states = []
+                  for estado in linha.strip().split(' '):
+                      if estado in resposta['estados']:
+                          final_states.append(estado)
+                      else:
+                          raise Exception('Os estados finais devem estar presentes na descrição do autômato')
+                  resposta['estados_finais'] = final_states
+              elif linha == linhas[3]:
+                  if linha.strip() in resposta['estados']:
+                      resposta['estado_inicial'] = linha.strip()
+                  else:
+                      raise Exception('O estado inicial não está presente na descrição do autômato')
+              else:
+                  linha = linha.strip().split(' ')
+                  if len(linha) >= 3:
+                      if linha[0] in resposta['estados'] and linha[2] in resposta['estados'] and linha[1] in resposta['simbolos']:
+                          try:
+                              regras.append(tuple(linha))
+                          except ValueError:
+                              raise Exception('O valor não pôde ser convertido para tupla e inserido nas regras do autômato')
+                      else:
+                          raise Exception('Os estados e símbolos devem estar presentes na descrição do autômato')
+                  else:
+                      raise Exception('As regras de transição precisam de no mínimo 3 parâmetros')
+              resposta['regras'] = regras
+        return resposta          
+    except FileNotFoundError:
+      raise Exception('O arquivo não foi encontrado no sistema')
 
 
 def process(automata, words):
@@ -58,7 +52,6 @@ def process(automata, words):
                 raise Exception('As palavras devem ser do tipo string')
     else:
         raise Exception('O tipo esperado para o autômato é dict e para a palavra é list')
-
     try:
         simbolos = automata['simbolos']
         estados = automata['estados']
