@@ -1,5 +1,6 @@
 """Implementação de autômatos finitos."""
 
+
 def load_automata(filename):
     """
     Lê os dados de um autômato finito a partir de um arquivo.
@@ -75,7 +76,7 @@ def load_automata(filename):
 def process(automata, words):
     """
     Processa a lista de palavras e retora o resultado.
-    
+
     Os resultados válidos são ACEITA, REJEITA, INVALIDA.
     """
     if isinstance(automata, dict) and isinstance(words, list):
@@ -86,7 +87,6 @@ def process(automata, words):
         raise Exception('O tipo esperado para o autômato é dict e para a palavra é list')
     try:
         simbolos = automata['simbolos']
-        estados = automata['estados']
         estados_finais = automata['estados_finais']
         estado_inicial = automata['estado_inicial']
         regras = automata['regras']
