@@ -171,6 +171,8 @@ def process(automata, words):
     print("Lista Palavras e resultados")
     for chave, valor in DictWord.items():
         print(f"{chave}: {valor}")
+    resultado = DictWord
+    #print(resultado)
     #return DictWord
 #Verificar se uma palavra válida, ou seja, se todos os símbolos da palavra fazem parte do alfabeto da lingugaem
 def VerificaPalavra(palavra,simbolos):
