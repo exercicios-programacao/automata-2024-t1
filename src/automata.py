@@ -85,14 +85,21 @@ def load_automata(filename):
     #print(automata)
     retStatusautomata = DescricaoautomataValida(automata)
     #words = ["ababa","cc"]
-    words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
-    words = [
-    "a",
-    "aaaa",
-    "aaa",
-    "aab",
-    "aaaaaaaa"]    
-    
+    #words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
+    """words = [
+      "",
+      "a",
+      "b",
+      "ab",
+      "abb",
+      "aabb",
+      "abab",
+      "baba",
+      "bbaa",
+      "abaa",
+      "bbbabaaa",
+      "bbabbaa"]    
+    """
     #words = ["a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     retprocess = process(automata,words)
     #print(retprocess)
@@ -110,9 +117,9 @@ def process(automata, words):
     #for regras in listaRegras:
         #print("\torigem: "+regras[0]+" símbolo: "+regras[1]+" destino: "+regras[2])
     resultado = "OK"
-    contador = 0;
     DictWord={}
     for word in words:
+        contador = 0;
         palavraAserMontada=""
         # tenta reconhecer `word`
         retTuple = VerificaPalavra(word,simbolos)
@@ -166,7 +173,11 @@ def process(automata, words):
             DictWord[word] = resultado
         else:
             if(retTuple[1]=="INVALIDA"):
-                DictWord[word] = "INVALIDA"
+                if(len(word)>0):
+                    DictWord[word] = "INVALIDA"
+                else:
+                    if(EstadoInicial in estadosFinais):
+                        DictWord[word] = "ACEITA"
             else:
                 DictWord[word] = "REJEITA"
         pass
@@ -191,7 +202,7 @@ def VerificaPalavra(palavra,simbolos):
     else :
         return tuple((palavra,"INVALIDA"))
 def DescricaoautomataValida(automata):
-    print("DescricaoautomataValida")
+    #print("DescricaoautomataValida")
     #print(automata)
     if (automata.get("simbolos")!=""
         and len(automata.get("estados"))>0
