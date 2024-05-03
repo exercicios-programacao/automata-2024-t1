@@ -85,21 +85,7 @@ def load_automata(filename):
     #print(automata)
     retStatusautomata = DescricaoautomataValida(automata)
     #words = ["ababa","cc"]
-    #words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
-    """words = [
-      "",
-      "a",
-      "b",
-      "ab",
-      "abb",
-      "aabb",
-      "abab",
-      "baba",
-      "bbaa",
-      "abaa",
-      "bbbabaaa",
-      "bbabbaa"]    
-    """
+    words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     #words = ["a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     retprocess = process(automata,words)
     #print(retprocess)
