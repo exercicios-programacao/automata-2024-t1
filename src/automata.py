@@ -88,9 +88,6 @@ def load_automata(filename):
     words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     #words = ["a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     retprocess = process(automata,words)
-    print("Lista Palavras e resultados")
-    for chave, valor in retprocess.items():
-        print(f"{chave}: {valor}")
     #print(retprocess)
 def process(automata, words):
     """
@@ -162,6 +159,9 @@ def process(automata, words):
         else:
             DictWord[word] = "REJEITA"
         pass
+    print("Lista Palavras e resultados")
+    for chave, valor in DictWord.items():
+        print(f"{chave}: {valor}")
     return DictWord
 #Verificar se uma palavra válida, ou seja, se todos os símbolos da palavra fazem parte do alfabeto da lingugaem
 def VerificaPalavra(palavra,simbolos):
