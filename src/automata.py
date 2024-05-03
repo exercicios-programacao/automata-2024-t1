@@ -1,6 +1,6 @@
 """Implementação de autômatos finitos."""
 from collections import namedtuple
-import os
+#import os
 def load_automata(filename):
     #print("load_automata")
     """
@@ -85,7 +85,14 @@ def load_automata(filename):
     #print(automata)
     retStatusautomata = DescricaoautomataValida(automata)
     #words = ["ababa","cc"]
-    #words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
+    words = ["","a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
+    words = [
+    "a",
+    "aaaa",
+    "aaa",
+    "aab",
+    "aaaaaaaa"]    
+    
     #words = ["a","b","ab","abb","aabb","abab","baba","bbaa","abaa","bbbabaaa","bbabbbaa"]
     retprocess = process(automata,words)
     #print(retprocess)
@@ -96,20 +103,19 @@ def process(automata, words):
     Os resultados válidos são ACEITA, REJEITA, INVALIDA.
     """
     caminhoDoAutonomo=""
-    EstadoInicial =  str(automata.get("NomeEstadoInicial"))
-    estadosFinais =  str(automata.get("estadosFinais"))
+    EstadoInicial = str(automata.get("NomeEstadoInicial"))
+    estadosFinais = str(automata.get("estadosFinais"))
     simbolos = str(automata.get("simbolos"))
-    listaRegras =  automata.get("RegrasTransicao")
+    listaRegras = automata.get("RegrasTransicao")
     #for regras in listaRegras:
         #print("\torigem: "+regras[0]+" símbolo: "+regras[1]+" destino: "+regras[2])
     resultado = "OK"
     contador = 0;
-    palavraAserMontada=""
     DictWord={}
     for word in words:
+        palavraAserMontada=""
         # tenta reconhecer `word`
         retTuple = VerificaPalavra(word,simbolos)
-        #print(retTuple[1]+" retet")
         if(retTuple[1]=="VALIDA"):
             if str(word)!="":
                 for caractere in str(word):
@@ -133,6 +139,7 @@ def process(automata, words):
                             #se origem for igual estado inicial
                             if regras[0] == ProximaOrigem:
                                 #se simbolo for igual caracter
+                                #print(regras[1] == caractere)
                                 if regras[1] == caractere:
                                     caminhoDoAutonomo = caminhoDoAutonomo+ "Orig: "+ regras[0]+  " Simb: " + regras[1] + " Destino:"+regras[2] + "\n"
                                     ProximaOrigem = regras[2]
@@ -143,7 +150,8 @@ def process(automata, words):
                             resultado="REJEITA"
                             break
                     contador+=1
-        
+            #print(palavraAserMontada +" " + str(word))
+            #print(palavraAserMontada == str(word))
             if palavraAserMontada == str(word):
                 if ProximaOrigem in estadosFinais:
                     resultado = "ACEITA"
@@ -157,7 +165,10 @@ def process(automata, words):
             #print(resultado)    
             DictWord[word] = resultado
         else:
-            DictWord[word] = "REJEITA"
+            if(retTuple[1]=="INVALIDA"):
+                DictWord[word] = "INVALIDA"
+            else:
+                DictWord[word] = "REJEITA"
         pass
     print("Lista Palavras e resultados")
     for chave, valor in DictWord.items():
@@ -291,10 +302,10 @@ def DescricaoautomataValida(automata):
         return Statusautomata
 """
 def main():
-    caminhoPasta = os.getcwd()
-    filename = caminhoPasta + "/Testes/01-simples.txt"
+    #caminhoPasta = os.getcwd()
+    #filename = caminhoPasta + "/Testes/01-simples.txt"
     #filename = ".\\Testes\\05-invalido.txt"
-    #filename = "teste.txt"
+    filename = "teste.txt"
     load_automata(filename)
 main()
 """
