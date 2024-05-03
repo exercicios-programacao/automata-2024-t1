@@ -291,6 +291,6 @@ def main():
     caminhoPasta = os.getcwd()
     filename = caminhoPasta + '/Testes/01-simples.txt'
     #filename = ".\\Testes\\05-invalido.txt"
-    filename = "teste.txt"
+    #filename = "teste.txt"
     load_automata(filename)
 main()
