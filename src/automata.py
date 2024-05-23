@@ -61,7 +61,7 @@ def process(automata, words):
 
     Os resultados válidos são ACEITA, REJEITA, INVALIDA.
     """
-    sigma, delta, q0, f = automata
+    q, sigma, delta, q0, f = automata
     resultado = {}
     for word in words:
         letras = list(word)
