@@ -63,13 +63,18 @@ def process(automata, words):
     """
     q, sigma, delta, q0, f = automata
     resultado = {}
+
     for word in words:
         letras = list(word)
+        estado_invalido = False
+
         for letra in letras:
             if letra not in sigma:
                 resultado[word] = 'INVALIDA'
+                estado_invalido = True
                 break
-        else:
+
+        if not estado_invalido:
             atual = q0
             for letra in letras:
                 if letra in delta.get(atual, {}):
@@ -82,4 +87,9 @@ def process(automata, words):
                     resultado[word] = 'ACEITA'
                 else:
                     resultado[word] = 'REJEITA'
+
+        if estado_invalido and atual in q:
+            resultado[word] = 'INVALIDA'
+        elif not estado_invalido and atual not in q:
+            resultado[word] = 'REJEITA'
     return resultado
