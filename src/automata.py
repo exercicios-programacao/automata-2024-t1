@@ -25,10 +25,10 @@ def load_automata(filename: str):
 
             for linha in linhas[4:]:
                 transicao = linha.strip().split()
-                if (len(transicao) != 3 or
+                if ((len(transicao) != 3 or
                         transicao[0] not in estados or
                         transicao[1] not in alfabeto or
-                        transicao[2] not in estados):
+                        transicao[2] not in estados)):
                     raise ErroException("Transição inválida.")
 
                 estado_origem = transicao[0]
@@ -63,8 +63,8 @@ def process(automata, words):
 
             estado_atual = estado_inicial
             for simbolo in word:
-                if (estado_atual in transicoes
-                        and simbolo in transicoes[estado_atual]):
+                if ((estado_atual in transicoes
+                        and simbolo in transicoes[estado_atual])):
                     estado_atual = transicoes[estado_atual][simbolo]
                 else:
                     verifica[word] = "REJEITA"
