@@ -1,63 +1,83 @@
+class ErroException(Exception):
+    """
+    aqui crio um exceção personalizada
+    atributos:
+        mensagem (str): descrição do erro encontrado
+    """
+    def __init__(self, mensagem):
+        self.mensagem = mensagem
+        super().__init__(self.mensagem)
+
+
 def load_automata(filename: str):
+    """aqui carrega um autômato a partir de um arquivo."""
     try:
-        with open(filename) as arquivo:
+        with open(filename, encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
 
             if len(linhas) < 5:
-                raise Exception("Arquivo não é autômato")
+                raise ErroException("Arquivo não é autômato")
 
             alfabeto = linhas[0].strip().split()
             estados = linhas[1].strip().split()
-            estadosFinais = linhas[2].strip().split()
-            estadoInicial = linhas[3].strip()
+            estados_finais = linhas[2].strip().split()
+            estado_inicial = linhas[3].strip()
 
             transicoes = {}
 
             for linha in linhas[4:]:
                 transicao = linha.strip().split()
-                if len(transicao) != 3 or transicao[0] not in estados or transicao[1] not in alfabeto or transicao[2] not in estados:
-                    raise Exception("Transição inválida encontrada")
-                
+                if (len(transicao) != 3 or
+                        transicao[0] not in estados or
+                        transicao[1] not in alfabeto or
+                        transicao[2] not in estados):
+                    raise ErroException("Transição inválida")
+
                 estado_origem = transicao[0]
                 simbolo = transicao[1]
                 estado_destino = transicao[2]
 
                 if estado_origem not in transicoes:
                     transicoes[estado_origem] = {}
-                
+
                 transicoes[estado_origem][simbolo] = estado_destino
 
-        return alfabeto, estados, estadosFinais, estadoInicial, transicoes
+        return alfabeto, estados, estados_finais, estado_inicial, transicoes
 
     except FileNotFoundError as e:
-        raise Exception(f"Arquivo {filename} não encontrado") from e
+        raise FileNotFoundError(f"Arquivo {filename} não encontrado") from e
+
+
 def process(automata, words):
-    alfabeto, estados, estadosFinais, estadoInicial, transicoes = automata
+    """aqui processa lista de palavras utilizando
+        um autômato finito determinístico"""
+    alfabeto, estados_finais, estado_inicial, transicoes = automata
 
     verifica = {}
     try:
         for word in words:
             if not isinstance(word, str):
-                raise Exception(f"A palavra '{word}' não é uma string válida")
+                raise ErroException("A palavra não é válida")
 
             if any(simbolo not in alfabeto for simbolo in word):
                 verifica[word] = "INVÁLIDA"
                 continue
 
-            estadoAtual = estadoInicial
+            estado_atual = estado_inicial
             for simbolo in word:
-                if estadoAtual in transicoes and simbolo in transicoes[estadoAtual]:
-                    estadoAtual = transicoes[estadoAtual][simbolo]
+                if (estado_atual in transicoes
+                        and simbolo in transicoes[estado_atual]):
+                    estado_atual = transicoes[estado_atual][simbolo]
                 else:
                     verifica[word] = "REJEITA"
                     break
             else:
-                if estadoAtual in estadosFinais:
+                if estado_atual in estados_finais:
                     verifica[word] = "ACEITA"
                 else:
                     verifica[word] = "REJEITA"
 
     except Exception as e:
-        raise Exception(f"Erro ao processar palavra '{word}': {e}") from e
+        raise ErroException(f"Erro ao processar palavra '{word}': {e}") from e
 
     return verifica
