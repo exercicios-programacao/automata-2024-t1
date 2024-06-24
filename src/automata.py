@@ -1,22 +1,20 @@
 class ErroException(Exception):
-    """
-    aqui crio um exceção personalizada
+    """Aqui crio um exceção personalizada.
     atributos:
-        mensagem (str): descrição do erro encontrado
-    """
+        mensagem (str): descrição do erro encontrado."""
     def __init__(self, mensagem):
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
 
 def load_automata(filename: str):
-    """aqui carrega um autômato a partir de um arquivo."""
+    """Aqui carrega um autômato a partir de um arquivo."""
     try:
         with open(filename, encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
 
             if len(linhas) < 5:
-                raise ErroException("Arquivo não é autômato")
+                raise ErroException("Arquivo não é autômato.")
 
             alfabeto = linhas[0].strip().split()
             estados = linhas[1].strip().split()
@@ -31,7 +29,7 @@ def load_automata(filename: str):
                         transicao[0] not in estados or
                         transicao[1] not in alfabeto or
                         transicao[2] not in estados):
-                    raise ErroException("Transição inválida")
+                    raise ErroException("Transição inválida.")
 
                 estado_origem = transicao[0]
                 simbolo = transicao[1]
@@ -45,19 +43,19 @@ def load_automata(filename: str):
         return alfabeto, estados, estados_finais, estado_inicial, transicoes
 
     except FileNotFoundError as e:
-        raise FileNotFoundError(f"Arquivo {filename} não encontrado") from e
+        raise FileNotFoundError(f"Arquivo {filename} não encontrado.") from e
 
 
 def process(automata, words):
-    """aqui processa lista de palavras utilizando
-        um autômato finito determinístico"""
+    """Aqui processa lista de palavras utilizando
+        um autômato finito determinístico."""
     alfabeto, estados_finais, estado_inicial, transicoes = automata
 
     verifica = {}
     try:
         for word in words:
             if not isinstance(word, str):
-                raise ErroException("A palavra não é válida")
+                raise ErroException("A palavra não é válida.")
 
             if any(simbolo not in alfabeto for simbolo in word):
                 verifica[word] = "INVÁLIDA"
@@ -78,6 +76,6 @@ def process(automata, words):
                     verifica[word] = "REJEITA"
 
     except Exception as e:
-        raise ErroException(f"Erro ao processar palavra '{word}': {e}") from e
+        raise ErroException(f"Erro ao processar palavra '{word}': {e}.") from e
 
     return verifica
