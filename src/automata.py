@@ -6,7 +6,7 @@ class ErroException(Exception):
     def __init__(self, mensagem):
         """Aqui inicializa a exceção.
         Args:
-            mensagem (str): Mensagem do erro"""
+            mensagem (str): Mensagem do erro."""
 
         self.mensagem = mensagem
         super().__init__(self.mensagem)
@@ -60,26 +60,27 @@ def process(automata, words):
     verifica = {}
     try:
         for word in words:
-            if not isinstance(word, str):
-                raise ErroException("A palavra não é válida.")
-
-            if any(simbolo not in alfabeto for simbolo in word):
-                verifica[word] = "INVÁLIDA"
-                continue
-
             estado_atual = estado_inicial
+            verificacao = True
+
             for simbolo in word:
-                if (estado_atual in transicoes
-                        and simbolo in transicoes[estado_atual]):
-                    estado_atual = transicoes[estado_atual][simbolo]
-                else:
-                    verifica[word] = "REJEITA"
+                if simbolo not in alfabeto:
+                    verifica[word] = "INVÁLIDA"
+                    verificacao = False
                     break
-            else:
-                if estado_atual in estados_finais:
-                    verifica[word] = "ACEITA"
-                else:
-                    verifica[word] = "REJEITA"
+
+                estado_atual = transicoes[estado_atual].get(simbolo)
+
+                if estado_atual is None:
+                    verificacao[word] = "REJEITA"
+                    verificacao = False
+                    break
+                
+                if verificacao: 
+                    if estado_atual in estados_finais:
+                        verifica[word] = "ACEITA"
+                    else:
+                        verifica[word] = "REJEITA"
 
     except Exception as e:
         raise ErroException(f"Erro ao processar palavra '{word}': {e}.") from e
