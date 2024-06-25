@@ -10,10 +10,10 @@ class ErroException(Exception):
 
     def __init__(self, mensagem):
         """Aqui inicializa a exceção.
-
         Args:
             mensagem (str): Mensagem do erro.
         """
+
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
