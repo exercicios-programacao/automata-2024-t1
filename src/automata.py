@@ -1,6 +1,4 @@
-"""
-Aqui vou implementar dfa.
-"""
+""" Aqui vou implementar dfa."""
 
 
 class ErroException(Exception):
@@ -10,14 +8,13 @@ class ErroException(Exception):
     atributos:
         mensagem (str): descrição do erro encontrado.
     """
-
     def __init__(self, mensagem):
         """
         Aqui inicializa a exceção.
         Args:
+
             mensagem (str): Mensagem do erro.
         """
-
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
@@ -65,7 +62,6 @@ def load_automata(filename: str):
 
 def process(automata, words):
     """Aqui processa lista de palavras."""
-
     alfabeto, estados_finais, estado_inicial, transicoes = automata
     verifica = {}
     try:
