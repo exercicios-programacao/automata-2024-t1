@@ -14,7 +14,6 @@ class ErroException(Exception):
         Args:
             mensagem (str): Mensagem do erro.
         """
-
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
