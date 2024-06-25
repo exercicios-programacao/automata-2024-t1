@@ -72,11 +72,11 @@ def process(automata, words):
                 estado_atual = transicoes[estado_atual].get(simbolo)
 
                 if estado_atual is None:
-                    verificacao[word] = "REJEITA"
+                    verifica[word] = "REJEITA"
                     verificacao = False
                     break
-                
-                if verificacao: 
+
+                if verificacao:
                     if estado_atual in estados_finais:
                         verifica[word] = "ACEITA"
                     else:
