@@ -26,33 +26,27 @@ def load_automata(filename: str):
             estados = linhas[1].strip().split()
             estados_finais = linhas[2].strip().split()
             estado_inicial = linhas[3].strip()
-            transicao = [linha.strip().split() for linha in linhas[4:]]
-                
+
             transicoes = {}
 
-            for estado in estados
-                transicoes[estado] = {}
-                for simbolo in alfabeto:
-                    transicoes[estado][simbolo] = None
-            
-            if (len(transicao) != 3
-                    and estado_origem not in estados
-                    and simbolo not in alfabeto
-                    and estado_destino not in estados):
-                    transicoes[estado_origem][simbolo] = estado_destino
-            else:
+            for linha in linhas[4:]:
+                transicao = linha.strip().split()
+                if (len(transicao) != 3
+                        or transicao[0] not in estados
+                        or transicao[1] not in alfabeto
+                        or transicao[2] not in estados):
                     raise ErroException("Transição inválida.")
-                
-            for estado in estados_finais:
-                if estado not in estados:
-                    raise ErroException("Estado não encontrado")
 
+                estado_origem = transicao[0]
+                simbolo = transicao[1]
+                estado_destino = transicao[2]
 
-            if estado_inicial not in estados:
-                raise ErroException("Estado não encontrado")
+                if estado_origem not in transicoes:
+                    transicoes[estado_origem] = {}
 
-        
-        return alfabeto, estados, estados_finais, estado_inicial, transicoes = automata
+                transicoes[estado_origem][simbolo] = estado_destino
+
+        return alfabeto, estados, estados_finais, estado_inicial, transicoes
 
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Arquivo {filename} não encontrado.") from e
