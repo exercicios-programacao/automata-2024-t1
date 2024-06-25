@@ -1,20 +1,34 @@
+"""
+
+Aqui vou implementar dfa.
+
+"""
+
+
 class ErroException(Exception):
-    """Aqui crio um exceção personalizada.
+    """
+    Aqui crio um exceção personalizada.
+
     atributos:
-        mensagem (str): descrição do erro encontrado."""
+        mensagem (str): descrição do erro encontrado.
+    """
 
     def __init__(self, mensagem):
-        """Aqui inicializa a exceção.
+        """
+        Aqui inicializa a exceção.
+
         Args:
-            mensagem (str): Mensagem do erro."""
+            mensagem (str): Mensagem do erro.
+        """
 
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
 
 def load_automata(filename: str):
-    """Aqui carrega um autômato a partir de um arquivo."""
-
+    """
+    Aqui carrega um autômato a partir de um arquivo.
+    """
     try:
         with open(filename, encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
@@ -53,7 +67,9 @@ def load_automata(filename: str):
 
 
 def process(automata, words):
-    """Aqui processa lista de palavras."""
+    """
+    Aqui processa lista de palavras.
+    """
 
     alfabeto, estados_finais, estado_inicial, transicoes = automata
 
