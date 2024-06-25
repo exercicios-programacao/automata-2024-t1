@@ -4,9 +4,10 @@ class ErroException(Exception):
         mensagem (str): descrição do erro encontrado."""
 
     def __init__(self, mensagem):
-        """Aqui inicializa a exceção de transição inválida com a mensagem.
+        """Aqui inicializa a exceção.
         Args:
             mensagem (str): Mensagem do erro"""
+
         self.mensagem = mensagem
         super().__init__(self.mensagem)
 
@@ -52,8 +53,7 @@ def load_automata(filename: str):
 
 
 def process(automata, words):
-    """Aqui processa lista de palavras utilizando
-        um autômato finito determinístico."""
+    """Aqui processa lista de palavras."""
 
     alfabeto, estados_finais, estado_inicial, transicoes = automata
 
