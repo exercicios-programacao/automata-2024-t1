@@ -37,10 +37,9 @@ def load_automata(filename: str):
             for linha in linhas[4:]:
                 transicao = linha.strip().split()
                 if (
-                    len(transicao) != 3 and +
-                    transicao[0] not in estados and +
-                    transicao[1] not in alfabeto and +
-                    transicao[2] not in estados
+                    len(transicao) != 3 and transicao[0] not in estados
+                    and transicao[1] not in alfabeto
+                    and transicao[2] not in estados
                 ):
                     raise ErroException("Transição inválida.")
 
