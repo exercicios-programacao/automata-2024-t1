@@ -1,14 +1,14 @@
-""" Aqui vou implementar dfa."""
+"""Aqui vou implementar dfa."""
 
 
 class ErroException(Exception):
     """Aqui crio um exceção personalizada.
-    atributos:
+Args:
         mensagem (str): descrição do erro encontrado."""
 
     def __init__(self, mensagem):
         """Aqui inicializa a exceção.
-        Args:
+Args:
             mensagem (str): Mensagem do erro."""
 
         self.mensagem = mensagem
