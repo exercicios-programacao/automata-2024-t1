@@ -28,32 +28,33 @@ def load_automata(filename: str):
                 raise ErroException("Arquivo não é autômato.")
 
             alfabeto = linhas[0].strip().split()
-            estados = linhas[1].strip().split()
+            es = linhas[1].strip().split()
             estados_finais = linhas[2].strip().split()
             estado_inicial = linhas[3].strip()
+            transicao = [linha.strip().split() for linha in linhas[4:]]
 
             transicoes = {}
 
-            for linha in linhas[4:]:
-                transicao = linha.strip().split()
-                if (
-                    len(transicao) != 3 or
-                        transicao[0] not in estados or
-                        transicao[1] not in alfabeto or
-                        transicao[2] not in estados
-                    ):
+            for estado in es:
+                transicoes[transicoes] = []
+                for simbolo in alfabeto:
+                    transicoes[estado][simbolo] = None
+
+            for origem, simbolo, destino in transicao:
+                if origem in es and simbolo in alfabeto and destino in es:
+                    transicao[origem][simbolo] = destino
+                else:
                     raise ErroException("Transição inválida.")
 
-                estado_origem = transicao[0]
-                simbolo = transicao[1]
-                estado_destino = transicao[2]
+            for estado in estados_finais:
+                if estado not in es:
+                    raise ErroException("Estado final não encontrado.")
 
-                if estado_origem not in transicoes:
-                    transicoes[estado_origem] = {}
+            if estado_inicial not in es:
+                raise ErroException("Estado inicial não encontrado")
 
-                transicoes[estado_origem][simbolo] = estado_destino
-
-        return alfabeto, estados, estados_finais, estado_inicial, transicoes
+            automata = alfabeto, es, transicao, estado_inicial, estados_finais
+            return automata
 
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Arquivo {filename} não encontrado.") from e
