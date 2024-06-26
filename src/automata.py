@@ -38,7 +38,7 @@ def load_automata(filename: str):
                 transicao = linha.strip().split()
                 if (
                     len(transicao) != 3
-                        or transicao[0] not in estados or
+                        or transicao[0] not in estados
                         transicao[1] not in alfabeto or
                         transicao[2] not in estados
                    ):
