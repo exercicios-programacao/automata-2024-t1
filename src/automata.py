@@ -8,6 +8,15 @@ class ErroException(Exception):
         mensagem (str): descrição do erro encontrado.
     """
 
+    def __init__(self, mensagem):
+        """Aqui inicializa a exceção.
+
+        Args:
+            mensagem (str): Mensagem do erro.
+        """
+        self.mensagem = mensagem
+        super().__init__(self.mensagem)
+
 
 def load_automata(filename: str):
     """Aqui carrega um autômato a partir de um arquivo."""
@@ -28,10 +37,9 @@ def load_automata(filename: str):
             for linha in linhas[4:]:
                 transicao = linha.strip().split()
                 if (
-                    len(transicao) != 3 and
-                        transicao[0] not in estados and
-                        transicao[1] not in alfabeto and
-                        transicao[2] not in estados
+                    len(transicao) != 3 and transicao[0] not in estados and
+                    + transicao[1] not in alfabeto and
+                    + transicao[2] not in estados
                 ):
                     raise ErroException("Transição inválida.")
 
@@ -53,30 +61,30 @@ def load_automata(filename: str):
 def process(automata, words):
     """Aqui processa lista de palavras."""
     alfabeto, estados_finais, estado_inicial, transicoes = automata
-
     verifica = {}
     try:
         for word in words:
-            if not isinstance(word, str):
-                raise ErroException("A palavra não é válida.")
-
-            if any(simbolo not in alfabeto for simbolo in word):
-                verifica[word] = "INVÁLIDA"
-                continue
-
             estado_atual = estado_inicial
+            verificacao = True
+
             for simbolo in word:
-                if (estado_atual in transicoes
-                        and simbolo in transicoes[estado_atual]):
-                    estado_atual = transicoes[estado_atual][simbolo]
-                else:
-                    verifica[word] = "REJEITA"
+                if simbolo not in alfabeto:
+                    verifica[word] = "INVÁLIDA"
+                    verificacao = False
                     break
-            else:
-                if estado_atual in estados_finais:
-                    verifica[word] = "ACEITA"
-                else:
+
+                estado_atual = transicoes[estado_atual].get(simbolo)
+
+                if estado_atual is None:
                     verifica[word] = "REJEITA"
+                    verificacao = False
+                    break
+
+                if verificacao:
+                    if estado_atual in estados_finais:
+                        verifica[word] = "ACEITA"
+                    else:
+                        verifica[word] = "REJEITA"
 
     except Exception as e:
         raise ErroException(f"Erro ao processar palavra '{word}': {e}.") from e
