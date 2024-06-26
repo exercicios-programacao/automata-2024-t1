@@ -20,7 +20,6 @@ class ErroException(Exception):
 
 def load_automata(filename: str):
     """Aqui carrega um autômato a partir de um arquivo."""
-
     try:
         with open(filename, encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
