@@ -3,13 +3,13 @@
 
 class ErroException(Exception):
     """Aqui crio um exceção personalizada.
-    
-    Args:
+
+    atributos:
         mensagem (str): descrição do erro encontrado."""
 
     def __init__(self, mensagem):
         """Aqui inicializa a exceção.
-        
+
         Args:
             mensagem (str): Mensagem do erro."""
 
@@ -59,7 +59,6 @@ def load_automata(filename: str):
 
 def process(automata, words):
     """Aqui processa lista de palavras."""
-
     alfabeto, estados_finais, estado_inicial, transicoes = automata
 
     verifica = {}
