@@ -28,32 +28,32 @@ def load_automata(filename: str):
                 raise ErroException("Arquivo não é autômato.")
 
             alfabeto = linhas[0].strip().split()
-            es = linhas[1].strip().split()
+            estados = linhas[1].strip().split()
             estados_finais = linhas[2].strip().split()
             estado_inicial = linhas[3].strip()
             transicao = [linha.strip().split() for linha in linhas[4:]]
 
             transicoes = {}
 
-            for estado in es:
+            for estado in estados:
                 transicoes[transicoes] = []
                 for simbolo in alfabeto:
                     transicoes[estado][simbolo] = None
 
             for origem, simbolo, destino in transicao:
-                if origem in es and simbolo in alfabeto and destino in es:
+                if origem in estados and simbolo in alfabeto and destino in estados:
                     transicao[origem][simbolo] = destino
                 else:
                     raise ErroException("Transição inválida.")
 
             for estado in estados_finais:
-                if estado not in es:
+                if estado not in estados:
                     raise ErroException("Estado final não encontrado.")
 
-            if estado_inicial not in es:
+            if estado_inicial not in estados:
                 raise ErroException("Estado inicial não encontrado")
 
-            automata = alfabeto, es, transicao, estado_inicial, estados_finais
+            automata = alfabeto, estados, transicao, estado_inicial, estados_finais
             return automata
 
     except FileNotFoundError as e:
