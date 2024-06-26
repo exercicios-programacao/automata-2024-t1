@@ -1,20 +1,16 @@
+"""Aqui vou implementar dfa."""
+
+
 class ErroException(Exception):
-    """Aqui crio um exceção personalizada.
-    atributos:
-        mensagem (str): descrição do erro encontrado."""
+    """Aqui crio uma exceção personalizada.
 
-    def __init__(self, mensagem):
-        """Aqui inicializa a exceção.
-        Args:
-            mensagem (str): Mensagem do erro"""
-
-        self.mensagem = mensagem
-        super().__init__(self.mensagem)
+    Args:
+        mensagem (str): descrição do erro encontrado.
+    """
 
 
 def load_automata(filename: str):
     """Aqui carrega um autômato a partir de um arquivo."""
-
     try:
         with open(filename, encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
